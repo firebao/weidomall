@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // +----------------------------------------------------------------------
 // | WeiDo 用户第三方登录接口类 
 // +----------------------------------------------------------------------
@@ -42,28 +42,27 @@ class LoginApi extends Base {
     }    
     public function callback(){
         $data = $this->class_obj->respon();
-        $logic = new User();
+        $user = new User();
         if(session('?user')) {
-        	$res = $logic->oauth_bind($data);//已有账号绑定第三方账号
+        	$res = $user->oauth_bind($data);//已有账号绑定第三方账号
         	if($res['status'] == 1){
-        		$this->success('绑定成功',U('User/index'));
+        		$this->success('绑定成功',url('user/index'));
         	}else{
-        		$this->error('绑定失败',U('User/index'));
+        		$this->error('绑定失败',url('user/index'));
         	}
         }
-        $data = $logic->thirdLogin($data);
+        $data = $user->thirdLogin($data);
         if($data['status'] != 1)
             $this->error($data['msg']);
         session('user',$data['result']);
         setcookie('user_id',$data['result']['user_id'],null,'/');
-        setcookie('is_distribut',$data['result']['is_distribut'],null,'/');
         $nickname = empty($data['result']['nickname']) ? '第三方用户' : $data['result']['nickname'];
-        setcookie('uname',urlencode($nickname),null,'/');
-        setcookie('cn',0,time()-3600,'/');
+        setcookie('nick_name',urlencode($nickname),null,'/');
+
         //登录后将购物车的商品的 user_id 改为当前登录的id            
-        $cartLogic = new CartLogic();
-        $cartLogic->setUserId($data['result']['user_id']);
-        $cartLogic->doUserLoginHandle();
+        $cart = new Cart();
+        $cart->setUserId($data['result']['user_id']);
+        $cart->doUserLoginHandle();
         if(isMobile()) {
             $this->success('登陆成功', url('Mobile/User/index'));
         } else {
