@@ -91,14 +91,22 @@
                             			                         
                                         <li class="spacer"></li>
                                         <li>
+<<<<<<< HEAD
                                             <a class="justclix" href="https://graph.qq.com/oauth2.0/authorize?reponse_type=code&client_id={$site['qqAppId']&redirect_uri={$qqBackUrl}}" title="qq">
+=======
+                                            <a class="justclix" href="{:url('LoginApi/login',array('oauth'=>'weixin'))}" title="weixin">
+>>>>>>> parent of b4ed76e... 第三方登录方式修改
                                                 <i class="weixin-icon"></i>
                                                 <span>微信登录</span>
                                             </a>
                                         </li>                                   
                                         <li class="spacer"></li>
                                         <li>
+<<<<<<< HEAD
                                             <a class="justclix" href="https://open.weixin.qq.com/connect/qrconnect?reponse_type=code&appid={$site['wxAppId']}&redirect_uri={$wxBackUrl｝&scope=snsapi_login&state={time()}#wechat_redirect}" title="weixin">
+=======
+                                            <a class="justclix" href="{:url('LoginApi/login',array('oauth'=>'qq'))}" title="QQ">
+>>>>>>> parent of b4ed76e... 第三方登录方式修改
                                                 <i class="QQ-icon"></i>
                                                 <span>QQ登录</span>
                                             </a>
