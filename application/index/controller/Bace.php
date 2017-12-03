@@ -20,6 +20,7 @@ use think\Cookie;
 use app\common\model\Category;
 use think\Request;
 use app\index\model\Area;
+use app\index\model\Cart;
 
 class Bace extends Controller
 {
@@ -99,12 +100,11 @@ class Bace extends Controller
             //获取投放站点的名称和广告的id
             $site_name = input('?get.from') ? htmlspecialchars(input('get.from')) : '本站';
             $from_ad = input('?get.ad_id') ? input('ad_id/d') : 0;
-
+            
             Session::set('from_id', $from_ad);   //用户点击的广告ID
             Session::set('referer', $site_name); //用户来源
 
-            unset($site_name);
-            
+            unset($site_name);            
             //统计访问信息
             visit_stats();
         }
@@ -121,6 +121,10 @@ class Bace extends Controller
             if (!Session::has('login_fail')) {
                 Session::set('login_fail', 0);
             }
+        } else {
+            $user = session('user');
+            $nickname = empty($user['nick_name']) ? $user['user_name'] : $user['nick_name'];
+            $this->assign('nickname', $nickname);
         }
         //session 不存在，检查cookie 
         if (Cookie::has('user_id') && Cookie::has('password')) {
@@ -139,8 +143,7 @@ class Bace extends Controller
                 update_user_info();
             }   
         }             
-    }
-    
+    }    
     /**
      * 公共变量的模板赋值
      * @access private
@@ -162,6 +165,10 @@ class Bace extends Controller
             ->where("is_show = 1")
             ->select();
         $this->assign('brand_list', $brand_list);
+        //购物车信息
+        $cart = new Cart();
+        $cart_list = $cart->getCartInfo();
+        $this->assign('cart_list', $cart_list);
     }
      
      /**

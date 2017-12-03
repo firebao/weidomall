@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // +----------------------------------------------------------------------
 // | WeiDo 用户第三方登录接口类 
 // +----------------------------------------------------------------------
@@ -10,19 +10,20 @@
 // +----------------------------------------------------------------------
 // | @Desp: 实现用户第三方登录的接口
 // +----------------------------------------------------------------------
-namespace app\home\controller;
+namespace app\index\controller;
 
 use app\model\User;
 use app\model\Cart;
+use think\Db;
 
-class LoginApi extends Base {
+class LoginApi extends Bace {
     public $config;
     public $oauth;
     public $class_obj;
 
     public function __construct(){
-        parent::__construct();       
-        $this->oauth = input('get.oauth');
+        parent::__construct();      
+        $this->oauth = input('oauth');
         //获取插件配置
         $data = Db::table('tp_plugin')->where("code", $this->oauth)->where("type", "login")->find();
         //配置反序列化
@@ -68,4 +69,4 @@ class LoginApi extends Base {
         } else {
             $this->success('登陆成功', url('User/index'));
         }
-}
+}}

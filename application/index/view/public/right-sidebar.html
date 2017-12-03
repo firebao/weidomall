@@ -1,0 +1,219 @@
+<link rel="stylesheet" type="text/css" href="__STATIC__/css/cart.css" />
+<script src="__STATIC__/js/index/ds.js"></script>
+<script src="__STATIC__/js/index/quick_links.js"></script>
+
+<!--[if lte IE 8]>
+<script src="__STATIC__/js/cart/ieBetter.js"></script>
+<![endif]-->
+<script src="__STATIC__/js/index/parabola.js"></script>
+<!--右侧贴边导航quick_links.js控制-->
+<div id="flyItem" class="fly_item" style="display:none;">
+	<p class="fly_imgbox">
+		<img src="__IMAGE__/images/item-pic.jpg" width="30" height="30">
+	</p>
+</div>
+<div class="mui-mbar-tabs">
+	<div class="quick_link_mian">
+		<div class="quick_links_panel">
+			<div id="quick_links" class="quick_links">
+				<li id="userHeader">
+					<a href="#" class="my_qlinks" style="margin-top: 5px;" title="用户信息">
+						<span class="fa-stack fa-lg fa-fw">
+  							<i class="fa fa-square-o fa-stack-2x"></i>
+  							<i class="fa fa-user fa-stack-1x"></i>
+						</span>
+					</a>
+					<div class="ibar_login_box status_login">
+						<!-- 用户登录后显示 -->
+						{if condition="isset($user)"}
+						<div class="avatar_box">
+							<p class="avatar_imgbox">
+								<?php if(!empty($user['user_photo'])){ ?>
+								<img src="__IMAGE__/$user['user_photo']" />
+								<?php }else{ ?>
+								<img src="__IMAGE__/face/default.png" height="100px" width="100px"/>
+								<?php } ?>
+							</p>
+							<ul class="user_info">
+								<li>用户名：{$nickname}</li>
+								<li>级&nbsp;别：{$user['user_rank']}</li>
+							</ul>
+						</div>
+						
+						<div class="ibar_recharge-btn">
+							<input type="button" value="我的订单" onclick="getMyOrders();"/>
+						</div>
+						<i class="icon_arrow_white"></i>
+					</div>
+					{/if}
+					</li>
+				<li id="shopCart">
+					<a href="#" class="message_list" title="购物车信息">
+						<span class="fa-stack fa-lg fa-fw">
+  							<i class="fa fa-square-o fa-stack-2x"></i>
+  							<i class="fa fa-shopping-cart fa-stack-1x"></i>
+						</span>
+						{if condition="$cart_list['cart_goods_total_num'] neq 0"}
+						<span class="count">{$cart_list['cart_goods_total_num']}</span>
+						{/if}
+					</a>
+				</li>
+				<if condition="$site['qqNo'] neq ''">
+				<li>
+					<a href="tencent://message/?uin=318348750&Site=QQ交谈&Menu=yes" title="QQ客服" style="padding-top:5px;padding-bottom:5px;margin-bottom: 5px;">
+						<span class="fa-stack fa-lg fa-fw">
+  							<i class="fa fa-square-o fa-stack-2x"></i>
+  							<i class="fa fa-qq fa-stack-1x"></i>
+						</span>						
+					</a>
+				</li>
+				</if>
+			</div>
+			<div class="quick_toggle">
+				<li><a href="#none"><i class="mpbtn_qrcode"></i></a>
+					<div class="mp_qrcode" style="display: none;">
+						<img src="__IMAGE__/wst_qr_code.jpg" width="148"  /><i class="icon_arrow_white"></i>
+					</div>
+				</li>
+				<li><a href="#top" class="return_top"><i class="top"></i></a></li>
+			</div>
+		</div>
+		<div id="quick_links_pop" class="quick_links_pop hide"></div>
+	</div>
+</div>
+<script src="__STATIC__/js/index/right-sidebar.js"></script>
+<!--
+<script type="text/javascript">
+	var numberItem = 3;
+	$('.cart_num').html(numberItem);
+	
+	<PHP>if(session('WST_USER.userId')>0){</PHP>
+	$(".quick_links_panel li").mouseenter(function() {
+		getVerify();
+		$(this).children(".mp_tooltip").animate({
+			left : -92,
+			queue : true
+		});
+		$(this).children(".mp_tooltip").css("visibility", "visible");
+		$(this).children(".ibar_login_box").css("display", "block");
+	});
+	$(".quick_links_panel li").mouseleave(function() {
+		$(this).children(".mp_tooltip").css("visibility", "hidden");
+		$(this).children(".mp_tooltip").animate({
+			left : -121,
+			queue : true
+		});
+		$(this).children(".ibar_login_box").css("display", "none");
+	});
+	<PHP>}else{</PHP>
+	$("#userHeader,#shopCart").click(function() {
+		loginWin();
+	});
+	
+	<PHP>}</PHP>
+	$(".quick_toggle li").mouseover(function() {
+		$(this).children(".mp_qrcode").show();
+	});
+	$(".quick_toggle li").mouseleave(function() {
+		$(this).children(".mp_qrcode").hide();
+	});
+
+	// 元素以及其他一些变量
+	var eleFlyElement = document.querySelector("#flyItem"), eleShopCart = document
+			.querySelector("#shopCart");
+	eleFlyElement.style.visibility = "hidden";
+	
+	var numberItem = 0;
+	// 抛物线运动
+	var myParabola = funParabola(eleFlyElement, eleShopCart, {
+		speed : 100, //抛物线速度
+		curvature : 0.0012, //控制抛物线弧度
+		complete : function() {
+			eleFlyElement.style.visibility = "hidden";
+			jQuery.post(Think.U('Home/Cart/getCartInfo') ,{"axm":1},function(data) {
+				var cart = WST.toJson(data);	
+				var totalmoney = 0, chkgoodsnum = 0, goodsnum = 0;
+				for(var shopId in cart.cartgoods){
+					var shop = cart.cartgoods[shopId];
+					for(var goodsId in shop.shopgoods){
+						var goods = shop.shopgoods[goodsId];
+						goodsnum++;
+						if(goods.ischk==1){
+							chkgoodsnum++;
+							totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+							totalmoney = totalmoney.toFixed(2);
+						}
+						
+					}
+				}
+				$(".cart_num").html(goodsnum);
+				$(".cart_gnum_chk").html(chkgoodsnum);
+				$(".wst-nvg-cart-price").html(totalmoney);
+			});
+			
+		}
+	});
+	// 绑定点击事件
+	if (eleFlyElement && eleShopCart) {
+		[].slice
+				.call(document.getElementsByClassName("btnCart"))
+				.forEach(
+						function(button) {
+							button
+									.addEventListener(
+											"click",
+											function(event) {
+												// 滚动大小
+												var scrollLeft = document.documentElement.scrollLeft
+														|| document.body.scrollLeft
+														|| 0, scrollTop = document.documentElement.scrollTop
+														|| document.body.scrollTop
+														|| 0;
+												eleFlyElement.style.left = event.clientX
+														+ scrollLeft + "px";
+												eleFlyElement.style.top = event.clientY
+														+ scrollTop + "px";
+												eleFlyElement.style.visibility = "visible";
+												$(eleFlyElement).show();
+												// 需要重定位
+												myParabola.position().move();
+											});
+						});
+	}
+
+	function getMyOrders(){
+		document.location.href = ThinkPHP.U("Home/Orders/queryByPage");
+	}
+	
+	function removeCartGoods(obj,goodsId,goodsAttrId,isPackage){
+		var url = Think.U('Home/Cart/delCartGoods');
+		var params = {"goodsId":goodsId,"goodsAttrId":goodsAttrId};
+		if(isPackage==1){
+			url = Think.U('Home/Cart/delPckCatGoods');
+			params = {"packageId":goodsId,"batchNo":goodsAttrId};
+		}
+		jQuery.post(url ,params,function(data) {
+			var cart = WST.toJson(data);	
+			var spId = $(obj).attr("spId");
+			$(obj).parent().parent().parent().remove();
+			if($("input[name='chk_goods_"+spId+"']").length==0){
+				$("#cart_shop_li_"+spId).remove();
+			}
+			var totalmoney = 0, goodsnum = 0;
+			for(var shopId in cart.cartgoods){
+				var shop = cart.cartgoods[shopId];
+				for(var goodsId in shop.shopgoods){
+					var goods = shop.shopgoods[goodsId];
+					goodsnum++;
+					totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+					totalmoney = totalmoney.toFixed(2);
+				}
+			}
+			$("#cart_handler_right_totalmoney, .wst-nvg-cart-price").html(totalmoney);
+			$('.cart_num, .cart_gnum_chk').html(goodsnum);
+			$(".cart_gnum").html(goodsnum);
+
+		});	
+	}
+	
+</script> -->

@@ -8,29 +8,22 @@
 // +----------------------------------------------------------------------
 // | @Version: v1.0
 // +----------------------------------------------------------------------
-// | @Desp: Area控制器模块
+// | @Desp: 商品规格模型模块
 // +----------------------------------------------------------------------
-namespace app\index\controller;
+namespace app\common\model;
 
-use think\Request;
-use app\index\model\Area as AreaModel;
+use think\Model;
 
-
-class Area extends Bace
+class SpecGoodsPrice extends Model
 {
-    /**
-     * 通过省份获取城市列表
-     * @access public
-     * @param
-     * @return
-     */
-    public function getCityListByProvince()
+
+    public function promGoods()
     {
-        $request = Request::instance();
-        $provinceId = $request->post('provinceId/d');
-        $area = new AreaModel();
-        $cityList = $area->getCityListByProvince($provinceId);
-        return $cityList;      
+        return $this->hasOne('PromGoods', 'id', 'prom_id')->cache(true,10);
     }
-    
+
+    public function goods()
+    {
+        return $this->hasOne('Goods', 'goods_id', 'goods_id')->cache(true,10);
+    }
 }

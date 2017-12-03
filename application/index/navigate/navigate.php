@@ -36,8 +36,14 @@ $_URL['User'] = url('user/index');
 $_URL['Index'] = url('index/index');
 $_URL['Area'] = url('index/area');
 return array(
-    'index/index'=>array(
-        'title'=>'围兜网',
+    'index/index' => array(
+        'title' => '围兜网',
+    ),
+    'index/loginapi' => array(
+        'title' => '',
+    ),
+    'index/cart' => array(
+        'title' => '购物车',
     ),
     'index/user'=>array(
         'title' =>'用户中心',

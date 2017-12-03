@@ -115,8 +115,7 @@ class User extends Model
     {
         //删除session
         Session::delete('user_id');
-        Session::delete('user_name');
-        Session::delete('email');
+        Session::delete('user');
         //删除cookie
         Cookie::delete('user_id');
         Cookie::delete('user_name');

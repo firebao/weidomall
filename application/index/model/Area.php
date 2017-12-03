@@ -42,7 +42,6 @@ class Area extends Model{
             $map['areaType']    = 1;
             $map['areaId']      = $areaId2;            
             $result             = $this->where($map)->field('areaId')->find();
-
 	        if ($result['areaId'] == '') {
 	            $areaId2 = 0;
 	        } 	            	        
